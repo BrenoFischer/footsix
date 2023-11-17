@@ -3,10 +3,12 @@ import { UserContext } from '../../contexts/UserContext'
 import Login from '../Login'
 import { createNewGame, listExistingGames } from '../../api/game'
 import { GameRef } from '../../types/Game'
+import { GameContext } from '../../contexts/GameContext'
 
 export default function Home() {
   const [games, setGames] = useState<GameRef[]>([])
   const { activeUser } = useContext(UserContext)
+  const { activeGame, selectGame } = useContext(GameContext)
 
   useEffect(() => {
     async function getGames() {
@@ -27,23 +29,31 @@ export default function Home() {
     }
   }
 
+  function handleSelectGame(game: GameRef) {
+    selectGame(game)
+  }
+
+  if (activeUser.state === 'gathering') return <h1>Gathering Data</h1>
+
+  if (!activeUser.data) return <Login />
+
+  if (activeGame) return <h1>Game Active</h1>
+
   return (
     <>
-      {activeUser.state === 'gathering' ? (
-        <h1>Gathering Data</h1>
-      ) : activeUser.data ? (
-        <>
-          <h1>Home</h1>
-          <button onClick={handleCreateNewGame}>Create New Game</button>
-          <ul>
-            {games.map((game) => (
-              <li key={game.id}>{game.id}</li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <Login />
-      )}
+      <h1>Home</h1>
+      <button onClick={handleCreateNewGame}>Create New Game</button>
+      <ul>
+        {games.map((game) => (
+          <li
+            key={game.id}
+            style={{ cursor: 'pointer' }}
+            onClick={() => handleSelectGame(game)}
+          >
+            {game.id}
+          </li>
+        ))}
+      </ul>
     </>
   )
 }
