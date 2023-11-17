@@ -4,7 +4,6 @@ import {
   createUserDocFromAuth,
   signInAuthUserWithEmailAndPassword,
 } from '../../api/authentication'
-import { createNewGame } from '../../api/game'
 
 export default function Login() {
   const [emailField, setEmailField] = useState('b@gmail.com')
@@ -30,7 +29,6 @@ export default function Login() {
       )
 
       await createUserDocFromAuth(user, { displayName: createUserName })
-      await createNewGame(user.uid)
     } catch (error) {
       console.log('Error while creating user', error)
     }
