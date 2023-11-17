@@ -4,10 +4,11 @@ import { UserContext } from '../../contexts/UserContext'
 import { signOutUser } from '../../api/authentication'
 
 export default function Header() {
-  const { activeUser } = useContext(UserContext)
+  const { activeUser, clearUser } = useContext(UserContext)
 
   async function handleSignOut() {
     await signOutUser()
+    clearUser()
   }
   return (
     <>

@@ -10,8 +10,8 @@ export default function Home() {
 
   useEffect(() => {
     async function getGames() {
-      if (activeUser) {
-        const gamesFromDatabase = await listExistingGames(activeUser.uid)
+      if (activeUser.state === 'completed' && activeUser.data) {
+        const gamesFromDatabase = await listExistingGames(activeUser.data.uid)
         setGames(gamesFromDatabase)
       }
     }
@@ -20,16 +20,18 @@ export default function Home() {
   }, [activeUser])
 
   async function handleCreateNewGame() {
-    if (activeUser) {
-      await createNewGame(activeUser.uid)
-      const gamesFromDatabase = await listExistingGames(activeUser.uid)
+    if (activeUser.state === 'completed' && activeUser.data) {
+      await createNewGame(activeUser.data.uid)
+      const gamesFromDatabase = await listExistingGames(activeUser.data.uid)
       setGames(gamesFromDatabase)
     }
   }
 
   return (
     <>
-      {activeUser ? (
+      {activeUser.state === 'gathering' ? (
+        <h1>Gathering Data</h1>
+      ) : activeUser.data ? (
         <>
           <h1>Home</h1>
           <button onClick={handleCreateNewGame}>Create New Game</button>
