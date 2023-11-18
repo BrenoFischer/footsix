@@ -1,39 +1,46 @@
 import { useContext } from 'react'
 import { GameContext } from '../../contexts/GameContext'
 import getTeamFromName from '../../utils/getTeamFromName'
+import { OnGoingMatchContext } from '../../contexts/OnGoingMatchContext'
+import { Match } from '../../types/Tournment/Match'
 
 export default function OnGoingMatch() {
   const { activeGame } = useContext(GameContext)
+  const { initiateMatch, onGoingMatch } = useContext(OnGoingMatchContext)
 
+  let currentMatch: Match
   const currentRound = activeGame?.data.currentWeek
-  const onGoingMatch =
-    activeGame!.data.tournments[0].rounds[currentRound!].matches[0]
 
-  const homeTeam = getTeamFromName(activeGame!.data, onGoingMatch.homeTeam)
+  if (onGoingMatch.state === 'initiated') {
+    currentMatch = onGoingMatch.activeMatch!
+  } else if (onGoingMatch.state === 'not initiated') {
+    currentMatch =
+      activeGame!.data.tournments[0].rounds[currentRound!].matches[0]
+
+    initiateMatch(currentMatch)
+  } else currentMatch = onGoingMatch.activeMatch!
+
+  const homeTeam = getTeamFromName(activeGame!.data, currentMatch.homeTeam)
   const visitorTeam = getTeamFromName(
     activeGame!.data,
-    onGoingMatch.visitorTeam,
+    currentMatch.visitorTeam,
   )
-  const homeTeamScore = onGoingMatch?.homeTeamScore
-  const visitorTeamScore = onGoingMatch?.visitorTeamScore
-
-  const homeTeamPlayers = homeTeam?.players
-  const visitorTeamPlayers = visitorTeam?.players
 
   return (
     <>
       <h1>On Going Match</h1>
       <span></span>
       <span>{homeTeam?.name}</span> - <span>{visitorTeam?.name}</span>
-      <span>{homeTeamScore}</span>X<span>{visitorTeamScore}</span>
+      <span>{currentMatch.homeTeamScore}</span>X
+      <span>{currentMatch.visitorTeamScore}</span>
       <div style={{ display: 'flex' }}>
         <ul>
-          {homeTeamPlayers?.map((player, idx) => {
+          {homeTeam.players?.map((player, idx) => {
             return <li key={player.name + idx}>{player.name}</li>
           })}
         </ul>
         <ul>
-          {visitorTeamPlayers?.map((player, idx) => {
+          {visitorTeam.players?.map((player, idx) => {
             return <li key={player.name + idx}>{player.name}</li>
           })}
         </ul>
