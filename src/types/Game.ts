@@ -1,11 +1,13 @@
-import { DocumentData } from 'firebase/firestore'
 import { Team } from './Team'
+import { Tournment } from './Tournment/Tournment'
 
 export interface Game {
-  team: Team
+  tournments: Tournment[]
+  myTeam: Team
+  gameTeams: Team[]
 }
 
 export interface GameRef {
   id: string
-  data: DocumentData
+  data: Game
 }

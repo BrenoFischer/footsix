@@ -1,10 +1,18 @@
+// import { TeamPerformanceInTournment } from './TeamPerformanceInTournment'
+
 import { Match } from './Match'
-import { TeamPerformanceInTournment } from './TeamPerformanceInTournment'
+
+export interface TournmentRound {
+  round: number
+  matches: Match[]
+}
 
 export interface Tournment {
+  rounds: TournmentRound[]
   name: string
-  table: TeamPerformanceInTournment[]
-  currentRound: number
+  teams: string[]
   totalNumberOfRounds: number
-  matches: Match[]
+  currentRound: number
+
+  // table: TeamPerformanceInTournment[]
 }

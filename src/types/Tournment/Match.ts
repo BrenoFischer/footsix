@@ -1,8 +1,6 @@
-import { Team } from '../Team'
-
 export interface Match {
-  homeTeam: Team
-  visitorTeam: Team
+  homeTeam: string
+  visitorTeam: string
   homeTeamScore: number
   visitorTeamScore: number
   roundOfMatch: number
