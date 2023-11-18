@@ -12,7 +12,7 @@ export function createTournment(teams: string[]): Tournment {
   let matches: Match[]
 
   const shiftArrays = () => {
-    // shift all the teams, but maintain fix User Team -> auxArrayHalfTeams1[0]
+    // shift all the teams, but maintain fixed User Team ( auxArrayHalfTeams1[0] )
     // the shift is done clockwise, for example:
     // [1, 2, 3, 4] -> [1, 5, 2, 3]
     // [5, 6, 7, 8] -> [6, 7, 8, 4]
@@ -30,10 +30,6 @@ export function createTournment(teams: string[]): Tournment {
   }
 
   for (let i = 0; i < teams.length - 2; i++) {
-    // console.log(rounds)
-    console.log(`Rodada: ${i + 1}`)
-    console.log(`Array1: ${auxArrayHalfTeams1}`)
-    console.log(`Array2: ${auxArrayHalfTeams2}`)
     matches = []
     auxArrayHalfTeams1.forEach((team, index) => {
       matches.push(matchGenerator(team, auxArrayHalfTeams2[index], i + 1))

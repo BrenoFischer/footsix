@@ -25,12 +25,12 @@ export const createNewGame = async (userId: string) => {
     'Grêmio',
   ]
   const gameTeams = gameTeamsNames.map((team) => createTeam(team))
-  console.log('Iniciou aqui')
 
   const newGame: Game = {
     myTeam,
     gameTeams,
     tournments: [createTournment([myTeam.name, ...gameTeamsNames])],
+    currentWeek: 0,
   }
 
   const userDocRef = doc(db, 'users', userId)

@@ -5,6 +5,7 @@ export interface Game {
   tournments: Tournment[]
   myTeam: Team
   gameTeams: Team[]
+  currentWeek: number
 }
 
 export interface GameRef {
