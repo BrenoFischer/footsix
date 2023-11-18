@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { GameContext } from '../../contexts/GameContext'
 import getTeamFromName from '../../utils/getTeamFromName'
 import { OnGoingMatchContext } from '../../contexts/OnGoingMatchContext'
-import { Match } from '../../types/Tournment/Match'
+import { Match } from '../../types/Match'
 
 export default function OnGoingMatch() {
   const { activeGame } = useContext(GameContext)
@@ -45,6 +45,9 @@ export default function OnGoingMatch() {
           })}
         </ul>
       </div>
+      <p>
+        Player with the ball: {currentMatch.rounds[0].playerWithTheBall.name}
+      </p>
     </>
   )
 }

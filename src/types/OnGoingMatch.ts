@@ -1,4 +1,4 @@
-import { Match } from './Tournment/Match'
+import { Match } from './Match'
 
 export interface OnGoingMatch {
   state: string

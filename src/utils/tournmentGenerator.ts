@@ -1,4 +1,4 @@
-import { Match } from '../types/Tournment/Match'
+import { Match } from '../types/Match'
 import { Tournment, TournmentRound } from '../types/Tournment/Tournment'
 import { matchGenerator } from './matchGenerator'
 

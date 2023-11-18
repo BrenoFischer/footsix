@@ -1,16 +1,18 @@
-import { Match } from '../types/Tournment/Match'
+import { Match } from '../types/Match'
 
 export function matchGenerator(
   homeTeam: string,
   visitorTeam: string,
-  roundOfMatch: number,
+  weekOfMatch: number,
 ): Match {
   const newMatch: Match = {
     homeTeam,
     visitorTeam,
     homeTeamScore: 0,
     visitorTeamScore: 0,
-    roundOfMatch,
+    rounds: [],
+    matchInitiated: false,
+    weekOfMatch,
   }
 
   return newMatch

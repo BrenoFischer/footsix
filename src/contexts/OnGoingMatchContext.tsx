@@ -1,6 +1,8 @@
-import { ReactNode, createContext, useState } from 'react'
+import { ReactNode, createContext, useContext, useState } from 'react'
 import { OnGoingMatch } from '../types/OnGoingMatch'
-import { Match } from '../types/Tournment/Match'
+import { Match } from '../types/Match'
+import { generateFirstMatchRound } from '../utils/generateFirstMatchRound'
+import { GameContext } from './GameContext'
 
 interface OnGoingMatchContextType {
   onGoingMatch: OnGoingMatch
@@ -16,6 +18,7 @@ interface OnGoingMatchContextProviderProps {
 export function OnGoingMatchContextProvider({
   children,
 }: OnGoingMatchContextProviderProps) {
+  const { activeGame } = useContext(GameContext)
   const [onGoingMatch, setOnGoingMatch] = useState<OnGoingMatch>({
     state: 'not initiated',
     activeMatch: null,
@@ -23,7 +26,16 @@ export function OnGoingMatchContextProvider({
 
   function initiateMatch(match: Match) {
     if (onGoingMatch.state !== 'initiated') {
-      setOnGoingMatch({ state: 'initiated', activeMatch: match })
+      const firstRound = generateFirstMatchRound(match, activeGame!.data)
+
+      match.rounds.push(firstRound)
+      match.matchInitiated = true
+      match.currentRound = 1
+
+      setOnGoingMatch({
+        state: 'initiated',
+        activeMatch: match,
+      })
     }
   }
 

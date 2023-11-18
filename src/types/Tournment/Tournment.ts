@@ -1,6 +1,6 @@
 // import { TeamPerformanceInTournment } from './TeamPerformanceInTournment'
 
-import { Match } from './Match'
+import { Match } from '../Match'
 
 export interface TournmentRound {
   round: number
