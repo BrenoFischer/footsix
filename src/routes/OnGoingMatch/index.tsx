@@ -56,17 +56,18 @@ export default function OnGoingMatch() {
       <p>total rounds: {currentMatch!.rounds.length}</p>
       <h2>Current field:</h2>
       <ul>
-        {currentMatch!.rounds[currentMatch!.currentRound].field.quadrants.map(
-          (quadrant, idx) => {
-            const quadrantPlayers = quadrant.playersOnQuadrant.map(
-              (player) => player.name + '-' + player.team,
-            )
-
-            return (
-              <li key={idx}>
-                Quadrant:{idx} - {quadrantPlayers}{' '}
-              </li>
-            )
+        {currentMatch!.rounds[currentMatch!.currentRound].field.rows.map(
+          (row, rowId) => {
+            return row.quadrants.map((quadrant, quadId) => {
+              const quadrantPlayers = quadrant.playersOnQuadrant.map(
+                (player) => player.name + '-' + player.team,
+              )
+              return (
+                <li key={rowId + quadId}>
+                  Row[{rowId}] - Quadrant:{quadId} - {quadrantPlayers}{' '}
+                </li>
+              )
+            })
           },
         )}
       </ul>

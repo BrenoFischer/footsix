@@ -1,5 +1,13 @@
-import { Quadrant } from './Quadrant'
+import { Player } from './Player'
+
+export interface Quadrant {
+  playersOnQuadrant: Player[]
+}
+
+export interface Row {
+  quadrants: Quadrant[]
+}
 
 export interface Field {
-  quadrants: Quadrant[]
+  rows: Row[]
 }
