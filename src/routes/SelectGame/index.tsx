@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../../contexts/UserContext'
-import Login from '../Login'
 import { createNewGame, listExistingGames } from '../../api/game'
 import { GameRef } from '../../types/Game'
 import { GameContext } from '../../contexts/GameContext'
@@ -10,6 +10,8 @@ export default function SelectGame() {
   const [games, setGames] = useState<GameRef[]>([])
   const { activeUser } = useContext(UserContext)
   const { activeGame, selectGame } = useContext(GameContext)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function getGames() {
@@ -36,7 +38,7 @@ export default function SelectGame() {
 
   if (activeUser.state === 'gathering') return <h1>Gathering Data</h1>
 
-  if (!activeUser.data) return <Login />
+  if (!activeUser.data) navigate('/sign-in')
 
   if (activeGame) return <Home />
 

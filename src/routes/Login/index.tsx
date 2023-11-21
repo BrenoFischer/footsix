@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   createAuthUserWithEmailAndPassword,
   createUserDocFromAuth,
@@ -6,16 +7,19 @@ import {
 } from '../../api/authentication'
 
 export default function Login() {
-  const [emailField, setEmailField] = useState('b@gmail.com')
+  const [emailField, setEmailField] = useState('b2@gmail.com')
   const [passwordField, setPasswordField] = useState('123456')
   const [createUserName, setCreateUserName] = useState('User Teste')
   const [createUserEmail, setCreateUserEmail] = useState('b2@gmail.com')
   const [createUserPassword, setCreateUserPassword] = useState('123456')
 
+  const navigate = useNavigate()
+
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     await signInAuthUserWithEmailAndPassword(emailField, passwordField)
+    navigate('/')
   }
 
   async function handleCreateUser(event: React.FormEvent<HTMLFormElement>) {

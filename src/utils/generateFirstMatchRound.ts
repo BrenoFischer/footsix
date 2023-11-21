@@ -10,8 +10,6 @@ export function generateFirstMatchRound(match: Match, activeGame: Game): Round {
   const homeTeamPlayers = getTeamFromName(activeGame, match.homeTeam)
   const visitorTeamPlayers = getTeamFromName(activeGame, match.visitorTeam)
 
-  console.log(field)
-
   field.quadrants[6].playersOnQuadrant.push(homeTeamPlayers.players[1]) // Defensor 1 to Q7
   field.quadrants[8].playersOnQuadrant.push(homeTeamPlayers.players[2]) // Defensor 2 to Q9
   field.quadrants[11].playersOnQuadrant.push(homeTeamPlayers.players[3]) // Mid 1 to Q 12

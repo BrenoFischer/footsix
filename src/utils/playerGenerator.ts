@@ -7,7 +7,7 @@ function generateRandomAtributeValue(min = 1, max = 13) {
   return Math.floor(Math.random() * (max - min) + min) // Max is exclusive and Min is inclusive
 }
 
-export function createPlayer(position: string): Player {
+export function createPlayer(position: string, team = ''): Player {
   const playerNames = [
     'Han Solo',
     'Jabba The Hutt',
@@ -26,6 +26,7 @@ export function createPlayer(position: string): Player {
       tackle: generateRandomAtributeValue(),
     },
     position,
+    team,
   }
 
   return player

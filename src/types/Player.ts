@@ -7,4 +7,5 @@ export interface Player {
     tackle: number
   }
   position: string
+  team: string
 }

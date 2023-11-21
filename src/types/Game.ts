@@ -1,3 +1,4 @@
+import { OnGoingMatch } from './OnGoingMatch'
 import { Team } from './Team'
 import { Tournment } from './Tournment/Tournment'
 
@@ -6,6 +7,7 @@ export interface Game {
   myTeam: Team
   gameTeams: Team[]
   currentWeek: number
+  onGoingMatch: OnGoingMatch
 }
 
 export interface GameRef {

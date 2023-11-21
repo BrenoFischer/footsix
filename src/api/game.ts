@@ -7,8 +7,7 @@ import {
 } from 'firebase/firestore'
 import { db } from './firebase'
 import { Game, GameRef } from '../types/Game'
-import { createTeam } from '../utils/teamGenerator'
-import { createTournment } from '../utils/tournmentGenerator'
+import { gameGenerator } from '../utils/gameGenerator'
 
 const firestoreConverter = {
   toFirestore: (data: Game) => data,
@@ -16,22 +15,7 @@ const firestoreConverter = {
 }
 
 export const createNewGame = async (userId: string) => {
-  const myTeam = createTeam()
-  const gameTeamsNames = [
-    'Fluminense',
-    'Botafogo',
-    'Vasco',
-    'Palmeiras',
-    'Grêmio',
-  ]
-  const gameTeams = gameTeamsNames.map((team) => createTeam(team))
-
-  const newGame: Game = {
-    myTeam,
-    gameTeams,
-    tournments: [createTournment([myTeam.name, ...gameTeamsNames])],
-    currentWeek: 0,
-  }
+  const newGame = gameGenerator()
 
   const userDocRef = doc(db, 'users', userId)
 
