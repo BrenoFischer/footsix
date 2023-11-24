@@ -7,7 +7,7 @@ export default function Home() {
 
   const tournments = activeGame?.data.tournments
   const currentWeek = activeGame?.data.currentWeek
-  const nextMatch = tournments![0].rounds[currentWeek!].matches[0]
+  const nextMatch = tournments![0].tournmentRounds[currentWeek!].matches[0]
 
   return (
     <>

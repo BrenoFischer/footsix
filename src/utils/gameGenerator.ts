@@ -1,5 +1,7 @@
 import { Game } from '../types/Game'
 import { Team } from '../types/Team'
+import { generateFirstMatchRound } from './generateFirstMatchRound'
+import getTeamFromName from './getTeamFromName'
 import { createTeam } from './teamGenerator'
 import { createTournment } from './tournmentGenerator'
 
@@ -12,18 +14,45 @@ export function gameGenerator(): Game {
     'Palmeiras',
     'Grêmio',
   ]
-  const gameTeams = gameTeamsNames.map((team) => createTeam(team))
+
+  // create all the Teams from the game
+  let gameTeams = gameTeamsNames.map((team) => createTeam(team))
+  gameTeams = [myTeam, ...gameTeams]
+
+  // create all the Tournments
+  const tournments = [createTournment([myTeam.name, ...gameTeamsNames])]
+
+  // create the OnGoingMatch with the first Round
+  const onGoingMatch = {
+    state: 'initiated' as const,
+    match: tournments[0].tournmentRounds[0].matches[0],
+  }
+
+  const homeTeamPlayers = getTeamFromName(
+    gameTeams,
+    onGoingMatch.match.homeTeam,
+  )
+  const visitorTeamPlayers = getTeamFromName(
+    gameTeams,
+    onGoingMatch.match.visitorTeam,
+  )
+
+  const firstRound = generateFirstMatchRound(
+    homeTeamPlayers,
+    visitorTeamPlayers,
+  )
+
+  onGoingMatch.match.rounds = [firstRound]
 
   const game: Game = {
     myTeam,
     gameTeams,
-    tournments: [createTournment([myTeam.name, ...gameTeamsNames])],
+    tournments,
     currentWeek: 0,
-    onGoingMatch: {
-      activeMatch: null,
-      state: 'not initiated',
-    },
+    onGoingMatch,
   }
+
+  console.log(game)
 
   return game
 }

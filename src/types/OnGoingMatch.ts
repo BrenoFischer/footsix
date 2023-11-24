@@ -1,6 +1,5 @@
 import { Match } from './Match'
 
-export interface OnGoingMatch {
-  state: string // 'initiated' | 'completed' | 'not initiated'
-  activeMatch: Match | null
-}
+export type OnGoingMatch =
+  | { state: 'initiated'; match: Match }
+  | { state: 'completed'; match: Match }

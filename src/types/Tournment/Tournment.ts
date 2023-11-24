@@ -3,12 +3,11 @@
 import { Match } from '../Match'
 
 export interface TournmentRound {
-  round: number
   matches: Match[]
 }
 
 export interface Tournment {
-  rounds: TournmentRound[]
+  tournmentRounds: TournmentRound[]
   name: string
   teams: string[]
   totalNumberOfRounds: number

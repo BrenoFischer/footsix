@@ -12,7 +12,5 @@ export function fieldGenerator(): Field {
     }
   }
 
-  console.log('field', field)
-
   return field
 }

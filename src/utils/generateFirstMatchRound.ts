@@ -1,14 +1,12 @@
-import { Game } from '../types/Game'
-import { Match } from '../types/Match'
 import { Round } from '../types/Round'
+import { Team } from '../types/Team'
 import { fieldGenerator } from './fieldGenerator'
-import getTeamFromName from './getTeamFromName'
 
-export function generateFirstMatchRound(match: Match, activeGame: Game): Round {
+export function generateFirstMatchRound(
+  homeTeamPlayers: Team,
+  visitorTeamPlayers: Team,
+): Round {
   const field = fieldGenerator()
-
-  const homeTeamPlayers = getTeamFromName(activeGame, match.homeTeam)
-  const visitorTeamPlayers = getTeamFromName(activeGame, match.visitorTeam)
 
   field.rows[1].quadrants[1].playersOnQuadrant.push(homeTeamPlayers.players[1]) // Defensor 1 to Q7
   field.rows[1].quadrants[3].playersOnQuadrant.push(homeTeamPlayers.players[2]) // Defensor 2 to Q9

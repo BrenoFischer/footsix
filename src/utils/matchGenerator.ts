@@ -10,6 +10,7 @@ export function matchGenerator(
     visitorTeam,
     homeTeamScore: 0,
     visitorTeamScore: 0,
+    currentRound: 0,
     rounds: [],
     matchInitiated: false,
     weekOfMatch,

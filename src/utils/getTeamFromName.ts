@@ -1,10 +1,7 @@
-import { Game } from '../types/Game'
+import { Team } from '../types/Team'
 
-export default function getTeamFromName(activeGame: Game, teamName: string) {
-  if (activeGame.myTeam.name.toLowerCase() === teamName.toLowerCase())
-    return activeGame.myTeam
-
-  const team = activeGame.gameTeams.filter(
+export default function getTeamFromName(teams: Team[], teamName: string) {
+  const team = teams.filter(
     (team) => team.name.toLowerCase() === teamName.toLowerCase(),
   )
 

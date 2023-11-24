@@ -1,29 +1,20 @@
 import { useContext } from 'react'
 import { GameContext } from '../../contexts/GameContext'
 import getTeamFromName from '../../utils/getTeamFromName'
-import { Match } from '../../types/Match'
 
 export default function OnGoingMatch() {
-  const { activeGame, initiateOnGoingMatch, getOnGoingMatch } =
-    useContext(GameContext)
+  const { activeGame } = useContext(GameContext)
 
-  const currentRound = activeGame?.data.currentWeek
+  if (!activeGame) return <h1>No game selected</h1>
 
-  let currentMatch: Match | null = getOnGoingMatch()
-
-  if (!currentMatch) {
-    if (activeGame?.data.onGoingMatch.state === 'not initiated') {
-      // the player Match will always be the first on the tournment round matches array (matches[0])
-      currentMatch =
-        activeGame!.data.tournments[0].rounds[currentRound!].matches[0]
-      initiateOnGoingMatch(currentMatch)
-    }
-  }
-
-  const homeTeam = getTeamFromName(activeGame!.data, currentMatch!.homeTeam)
+  const currentMatch = activeGame.data.onGoingMatch.match
+  const homeTeam = getTeamFromName(
+    activeGame.data.gameTeams,
+    currentMatch.homeTeam,
+  )
   const visitorTeam = getTeamFromName(
-    activeGame!.data,
-    currentMatch!.visitorTeam,
+    activeGame.data.gameTeams,
+    currentMatch.visitorTeam,
   )
 
   function handlePlayNextRound() {
@@ -34,9 +25,9 @@ export default function OnGoingMatch() {
     <>
       <h1>On Going Match</h1>
       <span></span>
-      <span>{homeTeam?.name}</span> - <span>{visitorTeam?.name}</span>
-      <span>{currentMatch!.homeTeamScore}</span>X
-      <span>{currentMatch!.visitorTeamScore}</span>
+      <span>{homeTeam.name}</span> - <span>{visitorTeam?.name}</span>
+      <span>{currentMatch.homeTeamScore}</span>X
+      <span>{currentMatch.visitorTeamScore}</span>
       <div style={{ display: 'flex' }}>
         <ul>
           {homeTeam.players?.map((player, idx) => {
@@ -50,13 +41,13 @@ export default function OnGoingMatch() {
         </ul>
       </div>
       <p>
-        Player with the ball: {currentMatch!.rounds[0].playerWithTheBall.name}
+        Player with the ball: {currentMatch.rounds[0].playerWithTheBall.name}
       </p>
-      <p>Current Round: {currentMatch!.currentRound}</p>
-      <p>total rounds: {currentMatch!.rounds.length}</p>
+      <p>Current Round: {currentMatch.currentRound}</p>
+      <p>total rounds: {currentMatch.rounds.length}</p>
       <h2>Current field:</h2>
       <ul>
-        {currentMatch!.rounds[currentMatch!.currentRound].field.rows.map(
+        {currentMatch.rounds[currentMatch.currentRound].field.rows.map(
           (row, rowId) => {
             return row.quadrants.map((quadrant, quadId) => {
               const quadrantPlayers = quadrant.playersOnQuadrant.map(
