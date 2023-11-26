@@ -1,12 +1,7 @@
+import { Player } from '../types/Player'
 import { Team } from '../types/Team'
-import { createPlayer } from './playerGenerator'
 
-export function createTeam(name = 'Flamengo'): Team {
-  const playersPositions = ['G', 'D', 'D', 'M', 'M', 'S']
-  const players = playersPositions.map((position) => {
-    return createPlayer(position, name)
-  })
-
+export function createTeam(name = 'Flamengo', players: Player[]): Team {
   const team: Team = {
     name,
     players,

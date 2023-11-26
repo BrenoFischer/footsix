@@ -1,4 +1,7 @@
+import { PositionOnField } from './PositionOnField'
+
 export interface Player {
+  id: string
   name: string
   atributes: {
     pass: number
@@ -7,5 +10,6 @@ export interface Player {
     tackle: number
   }
   position: string
+  positionOnField: PositionOnField
   team: string
 }

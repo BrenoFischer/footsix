@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import { uniqueNamesGenerator } from 'unique-names-generator'
 import { Player } from '../types/Player'
 
@@ -8,6 +9,7 @@ function generateRandomAtributeValue(min = 1, max = 13) {
 }
 
 export function createPlayer(position: string, team = ''): Player {
+  const id = uuidv4()
   const playerNames = [
     'Han Solo',
     'Jabba The Hutt',
@@ -18,6 +20,7 @@ export function createPlayer(position: string, team = ''): Player {
   ]
 
   const player: Player = {
+    id,
     name: uniqueNamesGenerator({ dictionaries: [playerNames] }),
     atributes: {
       pass: generateRandomAtributeValue(),
@@ -26,6 +29,7 @@ export function createPlayer(position: string, team = ''): Player {
       tackle: generateRandomAtributeValue(),
     },
     position,
+    positionOnField: { row: 0, quadrant: 0 },
     team,
   }
 
