@@ -1,6 +1,8 @@
 import { useContext } from 'react'
 import { GameContext } from '../../contexts/GameContext'
 import getTeamFromName from '../../utils/getTeamFromName'
+import { changePlayersPositionsOnNewRound } from '../../utils/OnGoingMatchUtils/changePlayersPositionsOnNewRound'
+import { Field, Row } from '../../types/Field'
 
 export default function OnGoingMatch() {
   const { activeGame } = useContext(GameContext)
@@ -18,8 +20,28 @@ export default function OnGoingMatch() {
   )
 
   function handlePlayNextRound() {
-    console.log('play next round')
+    const currentRound = currentMatch.currentRound
+    if (currentRound >= 90)
+      console.log('Match finished') // TODO handle finish match
+    else {
+      console.log('play next round')
+      changePlayersPositionsOnNewRound(currentMatch, homeTeam, visitorTeam)
+    }
   }
+
+  const field = currentMatch.rounds[currentMatch.currentRound].field
+
+  function mapQuadrant(row: Row, quadKey: keyof Row) {
+    return row[quadKey]
+  }
+
+  function mapRow(rowKey: keyof Field) {
+    console.log(field[rowKey])
+    return field[rowKey]
+  }
+
+  const rows = [0, 1, 2, 3, 4, 5, 6]
+  const quads = [0, 1, 2, 3]
 
   return (
     <>
@@ -47,20 +69,23 @@ export default function OnGoingMatch() {
       <p>total rounds: {currentMatch.rounds.length}</p>
       <h2>Current field:</h2>
       <ul>
-        {currentMatch.rounds[currentMatch.currentRound].field.rows.map(
-          (row, rowId) => {
-            return row.quadrants.map((quadrant, quadId) => {
-              const quadrantPlayers = quadrant.playersOnQuadrant.map(
-                (player) => player.name + '-' + player.team,
-              )
+        {rows.map((rowKey) => {
+          const row = mapRow(rowKey as keyof Field)
+          return quads.map((quadKey) => {
+            const quad = mapQuadrant(row, quadKey as keyof Row)
+            if (quad.playersOnQuadrant.length === 0)
               return (
-                <li key={rowId + quadId}>
-                  Row[{rowId}] - Quadrant:{quadId} - {quadrantPlayers}{' '}
+                <li key={quadKey + rowKey}>
+                  Row {rowKey} - Quad {quadKey}:
                 </li>
               )
-            })
-          },
-        )}
+            return quad.playersOnQuadrant.map((player) => (
+              <li key={player.id}>
+                Row {rowKey} - Quad {quadKey}: {player.name + player.team}
+              </li>
+            ))
+          })
+        })}
       </ul>
       <button onClick={handlePlayNextRound}>Play next round</button>
     </>

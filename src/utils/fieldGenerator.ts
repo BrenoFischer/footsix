@@ -1,15 +1,21 @@
-import { Field } from '../types/Field'
+import { Field, Row } from '../types/Field'
 
 export function fieldGenerator(): Field {
-  const field: Field = { rows: [] }
-  const quantityOfRows = 6
-  const quantityOfQuadrants = 4
+  const emptyRow: Row = {
+    0: { playersOnQuadrant: [] },
+    1: { playersOnQuadrant: [] },
+    2: { playersOnQuadrant: [] },
+    3: { playersOnQuadrant: [] },
+  }
 
-  for (let i = 0; i <= quantityOfRows; i++) {
-    field.rows.push({ quadrants: [] })
-    for (let j = 0; j < quantityOfQuadrants; j++) {
-      field.rows[i].quadrants.push({ playersOnQuadrant: [] })
-    }
+  const field: Field = {
+    0: emptyRow,
+    1: emptyRow,
+    2: emptyRow,
+    3: emptyRow,
+    4: emptyRow,
+    5: emptyRow,
+    6: emptyRow,
   }
 
   return field
