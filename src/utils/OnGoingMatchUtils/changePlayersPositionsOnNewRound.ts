@@ -1,39 +1,65 @@
 // import { Field } from '../../types/Field'
+import { Field, Quadrant, Row } from '../../types/Field'
 import { Match } from '../../types/Match'
 import { Player } from '../../types/Player'
 import { PositionOnField } from '../../types/PositionOnField'
 import { Team } from '../../types/Team'
 import getTeamFromName from '../getTeamFromName'
 
-// function updatePlayerPositionOnField(
-//   oldPlayerPos: PositionOnField,
-//   newPlayerPos: PositionOnField,
-//   player: Player,
-//   field: Field,
-// ): Field {
-//   const oldRow = field.rows[oldPlayerPos.row]
-//   const newRow = field.rows[newPlayerPos.quadrant]
-//   const oldQuad = oldRow.quadrants[oldPlayerPos.quadrant]
-//   const newQuad = newRow.quadrants[newPlayerPos.quadrant]
+function updatePlayerPositionOnField(
+  oldPlayerPos: PositionOnField,
+  newPlayerPos: PositionOnField,
+  player: Player,
+  field: Field,
+): Field {
+  const oldRowKey = oldPlayerPos.row as keyof Field
+  const newRowKey = newPlayerPos.row as keyof Field
+  const oldQuadKey = oldPlayerPos.quadrant as keyof Row
+  const newQuadKey = newPlayerPos.quadrant as keyof Row
+  const oldRow = field[oldRowKey]
+  const newRow = field[newRowKey]
+  const oldQuad = oldRow[oldQuadKey]
+  const newQuad = newRow[newQuadKey]
 
-//   // Get Players on the old PositionOnField and filter to exclude Player
-//   const oldQuadrantWithoutPlayer = oldQuad.playersOnQuadrant.filter(
-//     (playerOnSameQuadrant) => playerOnSameQuadrant.id !== player.id,
-//   )
-//   const oldRowWithoutPlayer = [...oldRow.quadrants, oldQuadrantWithoutPlayer]
-//   // Expand Players on new PositionOnField and adds Player to it
-//   const newQuadrantWithPlayer = [...newQuad.playersOnQuadrant, player]
-//   return {
-//     rows: [...field.rows, ]
-//   }
-// }
+  // Get Players on the old PositionOnField and filter to exclude Player
+  const oldQuadrantPlayersWithoutPlayer: Player[] =
+    oldQuad.playersOnQuadrant.filter(
+      (playerOnSameQuadrant) => playerOnSameQuadrant.id !== player.id,
+    )
+  const oldQuadrantWithoutPlayer: Quadrant = {
+    playersOnQuadrant: oldQuadrantPlayersWithoutPlayer,
+  }
+  const oldRowWithoutPlayer: Row = {
+    ...oldRow,
+    [oldQuadKey]: oldQuadrantWithoutPlayer,
+  }
 
-// function updatePlayerPosition(player: Player, newPos: PositionOnField): Player {
-//   return {
-//     ...player,
-//     positionOnField: newPos,
-//   }
-// }
+  // Expand Players on new PositionOnField and adds Player to it
+  const newQuadrantPlayersWithPlayer: Player[] = [
+    ...newQuad.playersOnQuadrant,
+    player,
+  ]
+  const newQuadrantWithPlayer: Quadrant = {
+    playersOnQuadrant: newQuadrantPlayersWithPlayer,
+  }
+  const newRowWithPlayer: Row = {
+    ...newRow,
+    [newQuadKey]: newQuadrantWithPlayer,
+  }
+
+  return {
+    ...field,
+    [oldRowKey]: oldRowWithoutPlayer,
+    [newRowKey]: newRowWithPlayer,
+  }
+}
+
+function updatePlayerPosition(player: Player, newPos: PositionOnField): Player {
+  return {
+    ...player,
+    positionOnField: newPos,
+  }
+}
 
 function checkPositionOnFieldAroundPlayer(
   pos: PositionOnField,
@@ -81,11 +107,13 @@ function playerIsInFrontOfTheBall(
 
 function getPlayerNewPos(
   player: Player,
-  playerFromTeamWithTheBall: boolean,
-  ballPos: PositionOnField,
+  playerWithTheBall: Player,
   homeTeam: string,
 ) {
   const pos = player.positionOnField
+  const ballPos: PositionOnField = playerWithTheBall.positionOnField
+  const playerFromTeamWithTheBall: boolean =
+    playerWithTheBall.team === player.team
   const playerRow = pos.row
   const playerFunction = player.position
   const playerIsFromHomeTeam = player.team === homeTeam
@@ -93,11 +121,14 @@ function getPlayerNewPos(
   const incrementRow = playerIsFromHomeTeam ? 1 : -1
   // Value reference of Row limit a Defensor will forward on the field, accordingly to attack direction
   const rowReferenceForDefensors = playerIsFromHomeTeam ? 4 : 3
+
+  // Goalkeepers will be always in the origin PositionOnField
   if (playerFunction === 'G') return pos
+  // Players with the ball will not move in this phase, they will move as an Action, if best option
+  if (player.id === playerWithTheBall.id) return pos
 
   // Players from Visitor Team will attack in a decrescent order of Rows
   if (playerFromTeamWithTheBall) {
-    console.log('Player from Team with the ball')
     // Players from Team with the ball will try to forward on the Field
     if (playerIsInFrontOfTheBall(player, ballPos, homeTeam)) {
       // Players will decide to move first, accordingly with the PositionOnField of the ball
@@ -129,7 +160,6 @@ function getPlayerNewPos(
     } else {
       // Player is not in Front of the Ball
       if (pos.row === ballPos.row) {
-        console.log('Player in the row of the ball')
         // Player is in the same row of the ball
         if (playerFunction === 'D') {
           return checkPositionOnFieldAroundPlayer(
@@ -149,10 +179,8 @@ function getPlayerNewPos(
           )
         }
       } else {
-        console.log('Player behind the ball')
         // Player is behind the ball
         if (playerFunction === 'D') {
-          console.log('D')
           // Defensors will be behind the ball and no greater than Row 4 (homeTeam) and Row 3 (visitorTeam) -> rowReferenceForDefensors
           const rowToGo =
             playerRow > rowReferenceForDefensors
@@ -185,7 +213,9 @@ function getPlayerNewPos(
   } else {
     // Player is not from the Team with the ball
     // Players without the ball will always to get the ball or position strategically to be near
+    return player.positionOnField
   }
+  return player.positionOnField
 }
 
 export function changePlayersPositionsOnNewRound(
@@ -207,12 +237,17 @@ export function changePlayersPositionsOnNewRound(
 
   playerWithTheBallTeam.players.forEach((player) => {
     console.log(player)
-    const newPos = getPlayerNewPos(
-      player,
-      true,
-      playerWithTheBall.positionOnField,
-      homeTeam.name,
-    )
-    console.log(newPos)
+    const newPos = getPlayerNewPos(player, playerWithTheBall, homeTeam.name)
+    if (player.position !== 'G') {
+      console.log('Updating newPos', newPos)
+      const updatedPlayerPos = updatePlayerPosition(player, newPos)
+      const updatedField = updatePlayerPositionOnField(
+        player.positionOnField,
+        newPos,
+        player,
+        currentRound.field,
+      )
+      console.log(updatedField)
+    }
   })
 }

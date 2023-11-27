@@ -36,7 +36,6 @@ export default function OnGoingMatch() {
   }
 
   function mapRow(rowKey: keyof Field) {
-    console.log(field[rowKey])
     return field[rowKey]
   }
 
@@ -81,7 +80,8 @@ export default function OnGoingMatch() {
               )
             return quad.playersOnQuadrant.map((player) => (
               <li key={player.id}>
-                Row {rowKey} - Quad {quadKey}: {player.name + player.team}
+                Row {rowKey} - Quad {quadKey}: {player.name} - {player.team} -{' '}
+                {player.position} - ({player.id})
               </li>
             ))
           })
